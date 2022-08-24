@@ -7,17 +7,22 @@ import react from '@vitejs/plugin-react';
 const { PORT = 3001 } = process.env;
 
 // https://vitejs.dev/config/
+/// <reference types="vitest" />
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: `http://localhost:${PORT}`,
-        changeOrigin: true,
-      },
+    plugins: [react()],
+    server: {
+        proxy: {
+            '/api': {
+                target: `http://localhost:${PORT}`,
+                changeOrigin: true,
+            },
+        },
     },
-  },
-  build: {
-    outDir: 'dist/app',
-  },
+    build: {
+        outDir: 'dist/app',
+    },
+    test: {
+        globals: true,
+        environment: 'node',
+    },
 });
