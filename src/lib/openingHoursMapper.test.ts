@@ -107,7 +107,21 @@ describe('Opening Hours Mapper', () => {
             ]);
         });
 
-        it('when given input is not a date range and time range', () => {
+        it.each([
+            ['Tues', 'Tue'],
+            ['Weds', 'Wed'],
+            ['Thurs', 'Thu'],
+        ])(
+            'when given day range contains a day with length more than 3: %s',
+            (a, b) => {
+                const input = [a, '11:30am-9pm'];
+                expect(
+                    mapDayRangeAndTimeRangeToDaysWithOpeningHours(input)[0].day,
+                ).toEqual(b);
+            },
+        );
+
+        it('throw error when given input is not a date range and time range', () => {
             const input = [''];
             expect(() =>
                 mapDayRangeAndTimeRangeToDaysWithOpeningHours(input),

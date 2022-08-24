@@ -48,8 +48,12 @@ export const mapDayRangeAndTimeRangeToDaysWithOpeningHours = (
     const timeRange = input[1];
     const [startDay, endDay] = dateRange.split('-');
     const dates: string[] = [];
-    const startDayIndex = weekdays.findIndex((day) => day === startDay);
-    const endDayIndex = weekdays.findIndex((day) => day === endDay);
+    const startDayIndex = weekdays.findIndex(
+        (day) => day === startDay.substring(0, 3),
+    );
+    const endDayIndex = endDay
+        ? weekdays.findIndex((day) => day === endDay.substring(0, 3))
+        : -1;
     let currentDayToAddIndex = startDayIndex;
 
     if (endDayIndex === -1) {
