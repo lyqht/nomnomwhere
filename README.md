@@ -1,74 +1,20 @@
-# Vite Boilerplate
+# nomnomwhere
 
-> Quickly bootstrap a new project with Vite Boilerplate.
+This is a fullstack application built using Vite and deployed on Vercel.
 
-This boilerplate contains all the tools you need to build a modern web app with TypeScript, React, Vite, Storybook and Express.  
-You can use it to quickly bootstrap your project.
+-   Frontend: ReactJS
 
-ESLint, stylelint, prettier, husky and lintstaged are configured to give you a solid development experience.
+-   Backend: NodeJS, Express, Supabase (Postgres)
 
-## Installing / Developing
+> This is a handy project for folks to learn how to deploy standalone frontend & backend apps in a single project onto Vercel, as usually NextJS apps is usually the way to do it for deployment to Vercel. However, in teams that are not familiar with NextJS, this is a nice alternative.
 
-First, [create a repository from this template](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/creating-a-repository-from-a-template).
+## Features
 
-Now you are ready to go:
+Frontend
 
-```shell
-npm install
-```
+-   Upload CSV functionality. Tested the uploading & insertion to DB with this [sample csv](api/sampleFile.csv), containing 2k+ records.
 
-This will install the dependencies required to run the boilerplate.
+Backend
 
-```shell
-npm run dev
-```
-
-Boom! These scripts run your server, client and storybook in development mode.
-
-The default PORTS are:
-
-- `3001` for the server
-- `3000` for the client
-- `6006` for the storybook
-
-If you don't like to call all scripts at once, you can also run:
-
-```shell
-npm run server:dev
-npm run client:dev
-npm run storybook
-```
-
-You can configure the server port by setting the `PORT` environment variable. Creating a `.env` file is supported. You can copy `.env.example` to `.env`.
-
-| KEY  | VALUE                                                         |
-| ---- | ------------------------------------------------------------- |
-| PORT | (Optional) Port for the server environment (defaults to 3001) |
-
-## Building
-
-To build the project, run:
-
-```shell
-npm run build
-```
-
-This will build the client, server and storybook.
-
-```shell
-npm start
-```
-
-In production, you have a single server serving everything.
-
-`/api/*` is the API endpoint.  
-`/storybook` is the Storybook.  
-`/*` is the client.
-
-## Tests
-
-A test runner is not installed (right now). But TypeScript, linter and prettier are checked on commit and push thanks to husky and lintstaged.
-
-## Licensing
-
-MIT
+-   Mapper for mapping opening hours input string (2nd column) into JSON
+-   Parse CSV records and upload them into DB

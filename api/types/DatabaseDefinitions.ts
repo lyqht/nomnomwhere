@@ -12,7 +12,7 @@ export interface Database {
             restaurants: {
                 Row: {
                     id: number;
-                    created_at: string | null;
+                    created_at: string;
                     opening_hours: Json;
                     name: string;
                 };
