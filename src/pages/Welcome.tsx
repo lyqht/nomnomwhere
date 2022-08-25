@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import FileUpload from '../components/FileUpload/FileUpload';
 import classes from './Welcome.module.css';
 
 function Welcome(): JSX.Element {
@@ -10,7 +11,12 @@ function Welcome(): JSX.Element {
             .then((data) => setMessage(data.message));
     }, []);
 
-    return <p className={classes.message}>{message}</p>;
+    return (
+        <div>
+            <p className={classes.message}>{message}</p>;
+            <FileUpload />
+        </div>
+    );
 }
 
 export default Welcome;

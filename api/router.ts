@@ -3,6 +3,9 @@ import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import os from 'os';
+import { finished } from 'stream/promises';
+import RestaurantService from './services/RestaurantService';
+import { CSVRecord } from './types/CSVRecord';
 
 const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
@@ -11,25 +14,30 @@ router.get('/hello', async (_req, res) => {
     res.status(200).json({ message: 'Hello World!' });
 });
 
-router.post('/upload', upload.single('file'), (req, res) => {
+router.post('/upload', upload.single('file'), async (req, res) => {
     const file = req.file;
 
-    if (file) {
-        const data = fs.readFileSync(file.path);
-
-        parse(data, (err, records) => {
-            if (err) {
-                console.error(err);
-                return res
-                    .status(400)
-                    .json({ success: false, message: 'An error occurred' });
-            }
-
-            return res.json({ data: records });
-        });
+    if (!file) {
+        return res.status(400).json('No CSV File given');
     }
 
-    res.status(400).json('No CSV File given');
+    const parser = fs.createReadStream(file.path).pipe(parse());
+
+    const records: CSVRecord[] = [];
+    parser.on('readable', function () {
+        let record;
+        while ((record = parser.read()) !== null) {
+            records.push(record);
+        }
+    });
+    await finished(parser);
+
+    console.log('Finished reading CSV');
+    const result = await RestaurantService.addRestaurantsFromCSVRecords(
+        records,
+    );
+
+    return res.json({ data: result });
 });
 
 export default router;

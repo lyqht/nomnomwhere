@@ -74,7 +74,6 @@ export const mapAllOpeningHoursIntoDaysWithOpeningHours = (
     input: string,
 ): DayWithOpeningHours[] => {
     const intervals = input.split('/');
-    console.debug(`=== ~ intervals`, intervals);
     const arrayOfDaysWithOpeningHours: DayWithOpeningHours[] = [];
 
     intervals.forEach((interval) => {
