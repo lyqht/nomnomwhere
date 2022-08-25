@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { mapAllOpeningHoursIntoDaysWithOpeningHours } from './openingHoursMapper';
 import {
     mapIntervalIntoDateRangeAndTimeRange,
     mapDayRangeAndTimeRangeToDaysWithOpeningHours,
+    mapAllOpeningHoursIntoDaysWithOpeningHours,
 } from './openingHoursMapper';
 
 describe('Opening Hours Mapper', () => {
@@ -24,7 +24,7 @@ describe('Opening Hours Mapper', () => {
         });
     });
 
-    describe('mapDateRangeAndTimeRangeToDays should return all days within an interval with same opening & closing hours', () => {
+    describe('mapDayRangeAndTimeRangeToDaysWithOpeningHours should return all days within an interval with same opening & closing hours', () => {
         it('when day range is only 2 days', () => {
             const input = ['Mon-Tue', '11:30am-9pm'];
             expect(
@@ -88,6 +88,49 @@ describe('Opening Hours Mapper', () => {
                 },
                 {
                     day: 'Mon',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+            ]);
+        });
+
+        it('when date range has startDayIndex === endDayIndex + 1', () => {
+            const input = ['Mon-Sun', '11:30am-9pm'];
+            expect(
+                mapDayRangeAndTimeRangeToDaysWithOpeningHours(input),
+            ).toEqual([
+                {
+                    day: 'Sun',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Mon',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Tue',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Wed',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Thu',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Fri',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Sat',
                     openingTime: '11:30am',
                     closingTime: '9pm',
                 },

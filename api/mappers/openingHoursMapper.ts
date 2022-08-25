@@ -1,7 +1,6 @@
-import { DayWithOpeningHours } from './types/OpeningHours';
+import { DayWithOpeningHours } from '../types/OpeningHours';
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 const isNumber = (n: string) => !isNaN(parseFloat(n)) && !isNaN((n as any) - 0);
 
 export const mapIntervalIntoDateRangeAndTimeRange = (
@@ -42,24 +41,25 @@ export const mapDayRangeAndTimeRangeToDaysWithOpeningHours = (
     const dateRange = input[0];
     const timeRange = input[1];
     const [startDay, endDay] = dateRange.split('-');
-    const dates: string[] = [];
-    const startDayIndex = weekdays.findIndex(
+    let dates: string[] = [];
+    let startDayIndex = weekdays.findIndex(
         (day) => day === startDay.substring(0, 3),
     );
     const endDayIndex = endDay
         ? weekdays.findIndex((day) => day === endDay.substring(0, 3))
         : -1;
-    let currentDayToAddIndex = startDayIndex;
 
     if (endDayIndex === -1) {
         dates.push(weekdays[startDayIndex]);
+    } else if (startDayIndex === endDayIndex + 1) {
+        dates = weekdays;
     } else {
-        while (currentDayToAddIndex !== endDayIndex + 1) {
-            dates.push(weekdays[currentDayToAddIndex]);
-            if (currentDayToAddIndex + 1 > weekdays.length - 1) {
-                currentDayToAddIndex = 0;
+        while (startDayIndex !== endDayIndex + 1) {
+            dates.push(weekdays[startDayIndex]);
+            if (startDayIndex + 1 > weekdays.length - 1) {
+                startDayIndex = 0;
             } else {
-                currentDayToAddIndex += 1;
+                startDayIndex += 1;
             }
         }
     }
@@ -72,14 +72,18 @@ export const mapAllOpeningHoursIntoDaysWithOpeningHours = (
     input: string,
 ): DayWithOpeningHours[] => {
     const intervals = input.split('/');
-    const arrayOfDaysWithOpeningHours = intervals.map((interval) => {
+    const arrayOfDaysWithOpeningHours: DayWithOpeningHours[] = [];
+
+    intervals.forEach((interval) => {
         const formattedInterval = interval.trim();
         const dateRangeAndTimeRange =
             mapIntervalIntoDateRangeAndTimeRange(formattedInterval);
-        return mapDayRangeAndTimeRangeToDaysWithOpeningHours(
-            dateRangeAndTimeRange,
-        );
+        const dayWithOpeningHours =
+            mapDayRangeAndTimeRangeToDaysWithOpeningHours(
+                dateRangeAndTimeRange,
+            );
+        arrayOfDaysWithOpeningHours.push(...dayWithOpeningHours);
     });
 
-    return arrayOfDaysWithOpeningHours.reduce((a, b) => a.concat(b), []);
+    return arrayOfDaysWithOpeningHours;
 };
