@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { Restaurant } from '../../api/types/Restaurant';
 import FileUpload from '../components/FileUpload/FileUpload';
-import classes from './Welcome.module.css';
 
 function Welcome(): JSX.Element {
-    const [message, setMessage] = useState('');
+    const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
 
     useEffect(() => {
-        fetch('/api/hello')
+        fetch('/api')
             .then((response) => response.json())
-            .then((data) => setMessage(data.message));
+            .then(({ data }) => setRestaurants(data));
     }, []);
 
     return (
         <div>
-            <p className={classes.message}>{message}</p>;
+            <div>
+                <h1>Nomnom where?</h1>
+                {restaurants ? (
+                    restaurants.map((stall) => (
+                        <div>
+                            <p>{stall.name}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p>No restaurants found :(</p>
+                )}
+            </div>
+
             <FileUpload />
         </div>
     );

@@ -14,6 +14,11 @@ router.get('/hello', async (_req, res) => {
     res.status(200).json({ message: 'Hello World!' });
 });
 
+router.get('/', async (_req, res) => {
+    const data = await RestaurantService.getRestaurants();
+    res.status(200).json({ data });
+});
+
 router.post('/upload', upload.single('file'), async (req, res) => {
     const file = req.file;
 

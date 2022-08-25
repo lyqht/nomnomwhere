@@ -16,6 +16,19 @@ function spliceIntoChunks(arr: any[], chunkSize: number) {
 }
 
 class RestaurantService {
+    public async getRestaurants(): Promise<Restaurant[]> {
+        const { data, error } = await supabase
+            .from<Restaurant>('restaurants')
+            .select();
+
+        if (error) {
+            console.error(JSON.stringify(error));
+            throw new Error(JSON.stringify(error));
+        }
+
+        return data ?? [];
+    }
+
     public async addRestaurantsFromCSVRecords(
         csvRecords: CSVRecord[],
     ): Promise<Restaurant[]> {

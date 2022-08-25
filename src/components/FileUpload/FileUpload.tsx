@@ -49,6 +49,16 @@ const FileUpload = () => {
     return (
         <Fragment>
             {message ? <div>{message}</div> : null}
+            <p>
+                You can also upload your own restaurants too! Refer{' '}
+                <a
+                    target={'_blank'}
+                    href="https://github.com/lyqht/nomnomwhere/blob/main/api/sampleFile.csv"
+                >
+                    here
+                </a>{' '}
+                for an example.
+            </p>
             <form onSubmit={onSubmit}>
                 <div className="custom-file mb-4">
                     <input
