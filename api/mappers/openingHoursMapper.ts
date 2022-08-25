@@ -54,7 +54,9 @@ export const mapDayRangeAndTimeRangeToDaysWithOpeningHours = (
     } else if (startDayIndex === endDayIndex + 1) {
         dates = weekdays;
     } else {
-        while (startDayIndex !== endDayIndex + 1) {
+        const indexToStop =
+            endDayIndex === weekdays.length - 1 ? 0 : endDayIndex + 1;
+        while (startDayIndex !== indexToStop) {
             dates.push(weekdays[startDayIndex]);
             if (startDayIndex + 1 > weekdays.length - 1) {
                 startDayIndex = 0;
@@ -72,6 +74,7 @@ export const mapAllOpeningHoursIntoDaysWithOpeningHours = (
     input: string,
 ): DayWithOpeningHours[] => {
     const intervals = input.split('/');
+    console.debug(`=== ~ intervals`, intervals);
     const arrayOfDaysWithOpeningHours: DayWithOpeningHours[] = [];
 
     intervals.forEach((interval) => {

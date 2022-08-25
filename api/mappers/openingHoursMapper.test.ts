@@ -94,7 +94,7 @@ describe('Opening Hours Mapper', () => {
             ]);
         });
 
-        it('when date range has startDayIndex === endDayIndex + 1', () => {
+        it('when day range has startDayIndex === endDayIndex + 1', () => {
             const input = ['Mon-Sun', '11:30am-9pm'];
             expect(
                 mapDayRangeAndTimeRangeToDaysWithOpeningHours(input),
@@ -124,6 +124,24 @@ describe('Opening Hours Mapper', () => {
                     openingTime: '11:30am',
                     closingTime: '9pm',
                 },
+                {
+                    day: 'Fri',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+                {
+                    day: 'Sat',
+                    openingTime: '11:30am',
+                    closingTime: '9pm',
+                },
+            ]);
+        });
+
+        it('when day range end day is Sat', () => {
+            const input = ['Fri-Sat', '11:30am-9pm'];
+            expect(
+                mapDayRangeAndTimeRangeToDaysWithOpeningHours(input),
+            ).toEqual([
                 {
                     day: 'Fri',
                     openingTime: '11:30am',
