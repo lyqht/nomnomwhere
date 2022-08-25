@@ -1,5 +1,5 @@
 import express from 'express';
-import router from './lib/router';
+import router from './router';
 import path from 'path';
 
 const { PORT = 3001 } = process.env;

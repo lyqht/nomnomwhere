@@ -19,7 +19,7 @@ export default defineConfig({
         },
     },
     build: {
-        outDir: 'dist/app',
+        outDir: 'dist',
     },
     test: {
         globals: true,

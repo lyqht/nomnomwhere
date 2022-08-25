@@ -1,12 +1,8 @@
+import { DayWithOpeningHours } from './types/OpeningHours';
+
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-type DayWithOpeningHours = {
-    day: string;
-    openingTime: string | null;
-    closingTime: string | null;
-};
-
-const isNumber = (n) => !isNaN(parseFloat(n)) && !isNaN(n - 0);
+const isNumber = (n: string) => !isNaN(parseFloat(n)) && !isNaN((n as any) - 0);
 
 export const mapIntervalIntoDateRangeAndTimeRange = (
     input: string,
@@ -16,8 +12,7 @@ export const mapIntervalIntoDateRangeAndTimeRange = (
 
     const dateRangeString: string[] = [];
     const timeRangeString: string[] = [];
-    for (let i = 0; i < letters.length; i++) {
-        const letter = letters[i];
+    for (const letter of letters) {
         if (!letterIsPartOfTimeString) {
             if (!isNumber(letter)) {
                 dateRangeString.push(letter);
