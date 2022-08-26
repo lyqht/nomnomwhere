@@ -6,29 +6,21 @@ type alertType = 'alert-success' | 'alert-error';
 
 interface Props {
     collections: Collection[] | null;
-    setCollections: (x: Collection[]) => void;
     selectedCollection: Collection | null;
     setSelectedCollection: (x: Collection | null) => void;
+    fetchAndSetCollections: () => void;
 }
 
 const Collections: React.FC<Props> = ({
     selectedCollection,
     setSelectedCollection,
     collections,
-    setCollections,
+    fetchAndSetCollections,
 }) => {
     const [userIsAddingCollection, setUserIsAddingCollection] = useState(false);
     const [loading, setLoading] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState<string>('');
     const [alert, setAlert] = useState<alertType | ''>('');
-
-    const fetchAndSetCollections = () => {
-        fetch('/api/collections')
-            .then((response) => response.json())
-            .then(({ data }: { data: Collection[] }) => {
-                setCollections(data);
-            });
-    };
 
     const addCollection = async () => {
         if (newCollectionName) {
@@ -130,9 +122,7 @@ const Collections: React.FC<Props> = ({
                         />
                         <div className="flex flex-row gap-4">
                             <button
-                                className={`btn btn-primary ${
-                                    loading ? 'loading' : ''
-                                }`}
+                                className={`btn btn-primary ${loading ? 'loading' : ''}`}
                                 onClick={async () => {
                                     await addCollection();
                                 }}

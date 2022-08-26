@@ -7,6 +7,7 @@ interface Props {
     data: Restaurant[];
     collections: Collection[];
     showSaveToCollectionColumn: boolean;
+    fetchAndSetCollections: () => void;
 }
 
 function isDateBeforeToday(date: Date) {
@@ -16,16 +17,14 @@ function isDateBeforeToday(date: Date) {
 const Table: React.FC<Props> = ({
     data,
     collections,
-    showSaveToCollectionColumn = false,
+    showSaveToCollectionColumn,
+    fetchAndSetCollections,
 }) => {
     const [pageNumberIndex, setPageNumberIndex] = useState(0);
     const [message, setMessage] = useState('');
     const [itemsBeingSaved, setItemsBeingSaved] = useState<string[]>([]);
 
-    const saveRestaurantIntoCollection = async (
-        restaurantId: string,
-        collectionId: string,
-    ) => {
+    const saveRestaurantIntoCollection = async (restaurantId: string, collectionId: string) => {
         try {
             setItemsBeingSaved([...itemsBeingSaved, restaurantId]);
             const { data } = await axios.patch('/api/collections', {
@@ -33,14 +32,13 @@ const Table: React.FC<Props> = ({
                 collectionId,
             });
             setMessage(`Saved into ${data.data.name}`);
+            fetchAndSetCollections();
         } catch (err) {
             console.error(JSON.stringify(err));
         }
 
         const updatedItemsBeingSaved = [...itemsBeingSaved];
-        updatedItemsBeingSaved.splice(
-            itemsBeingSaved.findIndex((id) => id === restaurantId),
-        );
+        updatedItemsBeingSaved.splice(itemsBeingSaved.findIndex((id) => id === restaurantId));
         setItemsBeingSaved(updatedItemsBeingSaved);
     };
 
@@ -52,9 +50,7 @@ const Table: React.FC<Props> = ({
                         <th></th>
                         <th>Name</th>
                         <th>Opening Hours</th>
-                        {showSaveToCollectionColumn ? (
-                            <th>Save in collection</th>
-                        ) : null}
+                        {showSaveToCollectionColumn ? <th>Save in collection</th> : null}
                     </tr>
                 </thead>
                 <tbody>
@@ -67,9 +63,7 @@ const Table: React.FC<Props> = ({
                                         <div className="font-bold w-1/3">
                                             {stall.name}
                                             <br />
-                                            {!isDateBeforeToday(
-                                                new Date(stall.created_at),
-                                            ) ? (
+                                            {!isDateBeforeToday(new Date(stall.created_at)) ? (
                                                 <span className="badge badge-ghost badge-sm">
                                                     Recently added
                                                 </span>
@@ -80,11 +74,8 @@ const Table: React.FC<Props> = ({
                             </td>
                             <td>
                                 {stall.opening_hours.map((openingHour) => (
-                                    <p
-                                        key={`opening-hours-${stall.id}-${openingHour.day}`}
-                                    >
-                                        {openingHour.day}{' '}
-                                        {openingHour.openingTime} —{' '}
+                                    <p key={`opening-hours-${stall.id}-${openingHour.day}`}>
+                                        {openingHour.day} {openingHour.openingTime} —{' '}
                                         {openingHour.closingTime}
                                     </p>
                                 ))}
@@ -95,9 +86,7 @@ const Table: React.FC<Props> = ({
                                         <label
                                             tabIndex={0}
                                             className={`btn m-1 ${
-                                                itemsBeingSaved.includes(
-                                                    stall.id,
-                                                )
+                                                itemsBeingSaved.includes(stall.id)
                                                     ? 'loading disabled'
                                                     : ''
                                             }`}
@@ -109,25 +98,19 @@ const Table: React.FC<Props> = ({
                                             className="dropdown-content menu p-2 shadow bg-base-100 rounded-box"
                                         >
                                             {collections &&
-                                                collections.map(
-                                                    (collection) => (
-                                                        <li
-                                                            key={`dropdown-select-option-${collection.id}`}
-                                                            onClick={async () => {
-                                                                await saveRestaurantIntoCollection(
-                                                                    stall.id,
-                                                                    collection.id,
-                                                                );
-                                                            }}
-                                                        >
-                                                            <a>
-                                                                {
-                                                                    collection.name
-                                                                }
-                                                            </a>
-                                                        </li>
-                                                    ),
-                                                )}
+                                                collections.map((collection) => (
+                                                    <li
+                                                        key={`dropdown-select-option-${collection.id}`}
+                                                        onClick={async () => {
+                                                            await saveRestaurantIntoCollection(
+                                                                stall.id,
+                                                                collection.id,
+                                                            );
+                                                        }}
+                                                    >
+                                                        <a>{collection.name}</a>
+                                                    </li>
+                                                ))}
                                         </ul>
                                     </div>
                                 </td>

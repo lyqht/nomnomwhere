@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Restaurant } from '../../api/types/Restaurant';
 import FileUpload from '../components/FileUpload';
 import Table from '../components/Table';
-import SearchFiltersSection, {
-    SearchFilters,
-} from '../components/SearchFilters';
+import SearchFiltersSection, { SearchFilters } from '../components/SearchFilters';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -17,16 +15,12 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(customParseFormat);
 
 const emoji = ['🍔', '🌯', '🥗', '🍜', '🍙', '🍕', '😫', '😵'];
-const getRandomItem = (items: string[]) =>
-    items[Math.floor(Math.random() * items.length)];
+const getRandomItem = (items: string[]) => items[Math.floor(Math.random() * items.length)];
 
 function Home(): JSX.Element {
     const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
-    const [selectedCollection, setSelectedCollection] =
-        useState<Collection | null>(null);
-    const [displayedRestaurants, setDisplayedRestaurants] = useState<
-        Restaurant[]
-    >([]);
+    const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
+    const [displayedRestaurants, setDisplayedRestaurants] = useState<Restaurant[]>([]);
     const [collections, setCollections] = useState<Collection[]>([]);
     const [searchNameInput, setSearchNameInput] = useState<string>();
     const [filters, setFilters] = useState<SearchFilters>({
@@ -44,17 +38,24 @@ function Home(): JSX.Element {
             });
     };
 
+    const fetchAndSetCollections = () => {
+        fetch('/api/collections')
+            .then((response) => response.json())
+            .then(({ data }: { data: Collection[] }) => {
+                setCollections(data);
+            });
+    };
+
     useEffect(() => {
         fetchAndSetRestaurants();
+        fetchAndSetCollections();
     }, []);
 
     useEffect(() => {
         if (searchNameInput) {
             setDisplayedRestaurants(
                 restaurants?.filter((stall) =>
-                    stall.name
-                        .toLowerCase()
-                        .includes(searchNameInput.toLowerCase()),
+                    stall.name.toLowerCase().includes(searchNameInput.toLowerCase()),
                 ) ?? [],
             );
         } else {
@@ -84,40 +85,19 @@ function Home(): JSX.Element {
         if (restaurants) {
             const filtered = restaurants.filter(
                 (stall) =>
-                    stall.opening_hours.filter(
-                        (timeslot: DayWithOpeningHours) => {
-                            const storeIsOpenInSelectedDays =
-                                filters.days.length > 0
-                                    ? filters.days.includes(timeslot.day)
-                                    : true;
-                            const storeIsOpenInSelectedTimeRange =
-                                dayjs(filters.timeRange[0], [
-                                    'h:m a',
-                                    'H:m',
-                                ]).isAfter(
-                                    dayjs(timeslot.openingTime, [
-                                        'h:m a',
-                                        'H:m',
-                                        'hha',
-                                    ]),
-                                ) &&
-                                dayjs(filters.timeRange[1], [
-                                    'h:m a',
-                                    'H:m',
-                                ]).isBefore(
-                                    dayjs(timeslot.closingTime, [
-                                        'h:m a',
-                                        'H:m',
-                                        'hha',
-                                    ]),
-                                );
-
-                            return (
-                                storeIsOpenInSelectedDays &&
-                                storeIsOpenInSelectedTimeRange
+                    stall.opening_hours.filter((timeslot: DayWithOpeningHours) => {
+                        const storeIsOpenInSelectedDays =
+                            filters.days.length > 0 ? filters.days.includes(timeslot.day) : true;
+                        const storeIsOpenInSelectedTimeRange =
+                            dayjs(filters.timeRange[0], ['h:m a', 'H:m']).isAfter(
+                                dayjs(timeslot.openingTime, ['h:m a', 'H:m', 'hha']),
+                            ) &&
+                            dayjs(filters.timeRange[1], ['h:m a', 'H:m']).isBefore(
+                                dayjs(timeslot.closingTime, ['h:m a', 'H:m', 'hha']),
                             );
-                        },
-                    ).length > 0,
+
+                        return storeIsOpenInSelectedDays && storeIsOpenInSelectedTimeRange;
+                    }).length > 0,
             );
             setDisplayedRestaurants(filtered);
         }
@@ -139,9 +119,8 @@ function Home(): JSX.Element {
                                 <Table
                                     collections={collections}
                                     data={displayedRestaurants}
-                                    showSaveToCollectionColumn={
-                                        selectedCollection ? false : true
-                                    }
+                                    showSaveToCollectionColumn={selectedCollection ? false : true}
+                                    fetchAndSetCollections={fetchAndSetCollections}
                                 />
                                 <FileUpload
                                     userIsUploading={userIsUploading}
@@ -151,10 +130,8 @@ function Home(): JSX.Element {
                             <div className="px-8 w-1/2 flex flex-col gap-8">
                                 <Collections
                                     collections={collections}
-                                    setCollections={setCollections}
-                                    setSelectedCollection={
-                                        setSelectedCollection
-                                    }
+                                    fetchAndSetCollections={fetchAndSetCollections}
+                                    setSelectedCollection={setSelectedCollection}
                                     selectedCollection={selectedCollection}
                                 />
                                 <SearchFiltersSection
