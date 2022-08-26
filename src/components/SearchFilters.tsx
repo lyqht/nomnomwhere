@@ -82,19 +82,12 @@ const SearchFiltersSection: React.FC<Props> = ({
                                 key={`search-filter-${weekday}`}
                                 className="label cursor-pointer badge badge-primary badge-outline p-4 items-center"
                             >
-                                <span className="label-text mr-2">
-                                    {weekday}
-                                </span>
+                                <span className="label-text mr-2">{weekday}</span>
                                 <input
                                     type="checkbox"
                                     checked={days.includes(weekday)}
                                     onChange={(e) =>
-                                        setDays(
-                                            getSelectedDays(
-                                                weekday,
-                                                e.target.checked,
-                                            ),
-                                        )
+                                        setDays(getSelectedDays(weekday, e.target.checked))
                                     }
                                     className="checkbox checkbox-primary"
                                 />

@@ -6,10 +6,7 @@ interface Props {
     setUserIsUploading: (x: boolean) => void;
 }
 
-const FileUpload: React.FC<Props> = ({
-    userIsUploading,
-    setUserIsUploading,
-}) => {
+const FileUpload: React.FC<Props> = ({ userIsUploading, setUserIsUploading }) => {
     const [file, setFile] = useState('');
     const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
@@ -93,11 +90,7 @@ const FileUpload: React.FC<Props> = ({
                 </div>
 
                 {message ? <div>{message}!</div> : null}
-                <input
-                    type="submit"
-                    value="Upload"
-                    className="btn btn-primary btn-block mt-4"
-                />
+                <input type="submit" value="Upload" className="btn btn-primary btn-block mt-4" />
             </form>
         </Fragment>
     );
