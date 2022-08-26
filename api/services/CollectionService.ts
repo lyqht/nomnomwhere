@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import { supabase } from '../db';
 import { Collection } from '../types/Collection';
 
@@ -20,7 +21,7 @@ class CollectionService {
     ): Promise<Collection> {
         const { data, error } = await supabase
             .from<Collection>('collections')
-            .insert(collection);
+            .insert({ ...collection, id: v4() });
 
         if (error) {
             console.error(JSON.stringify(error));

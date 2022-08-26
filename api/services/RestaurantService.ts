@@ -2,6 +2,7 @@ import { Restaurant, RestaurantToInsert } from '../types/Restaurant';
 import { mapCSVRecordToRestaurant } from '../mappers/csvRecordMapper';
 import { supabase } from '../db';
 import { CSVRecord } from '../types/CSVRecord';
+import { v4 } from 'uuid';
 
 function spliceIntoChunks(arr: any[], chunkSize: number) {
     const res = [];
@@ -50,7 +51,10 @@ class RestaurantService {
             for (const chunkedRecord of chunkedRecords) {
                 const restaurantsToInsert: RestaurantToInsert[] = [];
                 chunkedRecord.forEach((record) => {
-                    restaurantsToInsert.push(mapCSVRecordToRestaurant(record));
+                    restaurantsToInsert.push({
+                        ...mapCSVRecordToRestaurant(record),
+                        id: v4(),
+                    });
                 });
 
                 console.log(`Inserting data for chunk ${currentChunkIndex}`);
