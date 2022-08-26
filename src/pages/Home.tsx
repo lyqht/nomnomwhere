@@ -10,6 +10,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DayWithOpeningHours } from '../../api/types/OpeningHours';
+import Collections from '../components/Collections';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(customParseFormat);
@@ -109,14 +110,12 @@ function Home(): JSX.Element {
                         <>
                             <Table data={displayedRestaurants} />
                             <div className="px-8 w-1/2">
+                                <Collections />
                                 <SearchFiltersSection
                                     searchFilters={filters}
                                     setSearchFilters={setFilters}
                                     setSearchNameInput={setSearchNameInput}
                                 />
-                                <div className="py-4" id="collections">
-                                    My collections
-                                </div>
                             </div>
                         </>
                     ) : (
