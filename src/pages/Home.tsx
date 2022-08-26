@@ -5,6 +5,14 @@ import Table from '../components/Table';
 import SearchFiltersSection, {
     SearchFilters,
 } from '../components/SearchFilters';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DayWithOpeningHours } from '../../api/types/OpeningHours';
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(customParseFormat);
 
 const emoji = ['🍔', '🌯', '🥗', '🍜', '🍙', '🍕', '😫', '😵'];
 const getRandomItem = (items: string[]) =>
@@ -17,9 +25,8 @@ function Home(): JSX.Element {
     >([]);
     const [searchNameInput, setSearchNameInput] = useState<string>();
     const [filters, setFilters] = useState<SearchFilters>({
-        day: [],
-        openingTime: [],
-        closingTime: [],
+        days: [],
+        timeRange: ['11:00', '22:00'],
     });
 
     useEffect(() => {
@@ -49,17 +56,44 @@ function Home(): JSX.Element {
         if (restaurants) {
             const filtered = restaurants.filter(
                 (stall) =>
-                    stall.opening_hours.filter((timeslot) =>
-                        filters.day.includes(timeslot.day),
+                    stall.opening_hours.filter(
+                        (timeslot: DayWithOpeningHours) => {
+                            const storeIsOpenInSelectedDays =
+                                filters.days.length > 0
+                                    ? filters.days.includes(timeslot.day)
+                                    : true;
+                            const storeIsOpenInSelectedTimeRange =
+                                dayjs(filters.timeRange[0], [
+                                    'h:m a',
+                                    'H:m',
+                                ]).isAfter(
+                                    dayjs(timeslot.openingTime, [
+                                        'h:m a',
+                                        'H:m',
+                                        'hha',
+                                    ]),
+                                ) &&
+                                dayjs(filters.timeRange[1], [
+                                    'h:m a',
+                                    'H:m',
+                                ]).isBefore(
+                                    dayjs(timeslot.closingTime, [
+                                        'h:m a',
+                                        'H:m',
+                                        'hha',
+                                    ]),
+                                );
+
+                            return (
+                                storeIsOpenInSelectedDays &&
+                                storeIsOpenInSelectedTimeRange
+                            );
+                        },
                     ).length > 0,
             );
             setDisplayedRestaurants(filtered);
         }
-    }, [
-        filters.day.length,
-        filters.openingTime.length,
-        filters.closingTime.length,
-    ]);
+    }, [filters.days.length, filters.timeRange[0], filters.timeRange[1]]);
 
     return (
         <div className="p-12 h-screen">

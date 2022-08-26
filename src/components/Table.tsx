@@ -13,7 +13,7 @@ const Table: React.FC<Props> = ({ data }) => {
     const [pageNumberIndex, setPageNumberIndex] = useState(0);
 
     return (
-        <div className="overflow-x-auto w-1/2 h-full flex">
+        <div className="overflow-x-auto w-1/2 h-full flex shadow-md">
             <table className="table w-full">
                 <thead>
                     <tr>

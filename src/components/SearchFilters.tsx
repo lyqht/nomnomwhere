@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 
 export type SearchFilters = {
-    day: string[];
-    openingTime: string[];
-    closingTime: string[];
+    days: string[];
+    timeRange: [string, string];
 };
 
 interface Props {
@@ -20,27 +20,29 @@ const SearchFiltersSection: React.FC<Props> = ({
     searchFilters,
 }) => {
     const [name, setName] = useState('');
-    const getUpdatedFilters = (day: string, toShow: boolean): SearchFilters => {
-        const modifiedSearchFilters = { ...searchFilters };
-        if (modifiedSearchFilters.day.includes(day)) {
+    const [days, setDays] = useState(searchFilters.days);
+    const [timeRange, setTimeRange] = useState(searchFilters.timeRange);
+    const getSelectedDays = (day: string, toShow: boolean): string[] => {
+        const modifiedDays = [...days];
+        if (modifiedDays.includes(day)) {
             if (!toShow) {
-                modifiedSearchFilters.day.splice(
-                    modifiedSearchFilters.day.findIndex((d) => d === day),
+                modifiedDays.splice(
+                    modifiedDays.findIndex((d) => d === day),
                     1,
                 );
             }
         } else {
             if (toShow) {
-                modifiedSearchFilters.day.push(day);
+                modifiedDays.push(day);
             }
         }
-        return modifiedSearchFilters;
+        return modifiedDays;
     };
 
     return (
-        <div>
+        <div id="search-filters-section" className="shadow-md p-8 rounded">
             <div id="search-by-name-section">
-                <h2>Search by name</h2>
+                <h2 className="text-lg">Search by name</h2>
                 <div className="input-group">
                     <input
                         type="text"
@@ -50,7 +52,7 @@ const SearchFiltersSection: React.FC<Props> = ({
                     />
                     <button
                         type="button"
-                        className="btn btn-square"
+                        className="btn btn-primary btn-square"
                         title="search"
                         onClick={() => setSearchNameInput(name)}
                     >
@@ -71,31 +73,51 @@ const SearchFiltersSection: React.FC<Props> = ({
                     </button>
                 </div>
             </div>
-            <div className="py-4">
-                <h2>Search by day</h2>
-                <div className="form-control">
-                    {weekdays.map((weekday) => (
-                        <label
-                            key={`search-filter-${weekday}`}
-                            className="label cursor-pointer"
-                        >
-                            <span className="label-text">{weekday}</span>
-                            <input
-                                type="checkbox"
-                                checked={searchFilters.day.includes(weekday)}
-                                onChange={(e) =>
-                                    setSearchFilters(
-                                        getUpdatedFilters(
-                                            weekday,
-                                            e.target.checked,
-                                        ),
-                                    )
-                                }
-                                className="checkbox checkbox-primary"
-                            />
-                        </label>
-                    ))}
+            <div id="search-by-datetime-section">
+                <div id="search-by-day-section" className="py-4">
+                    <h2 className="text-lg">Search by opening hours</h2>
+                    <div className="form-control flex flex-row flex-wrap">
+                        {weekdays.map((weekday) => (
+                            <label
+                                key={`search-filter-${weekday}`}
+                                className="label cursor-pointer"
+                            >
+                                <span className="label-text mr-4">
+                                    {weekday}
+                                </span>
+                                <input
+                                    type="checkbox"
+                                    checked={days.includes(weekday)}
+                                    onChange={(e) =>
+                                        setDays(
+                                            getSelectedDays(
+                                                weekday,
+                                                e.target.checked,
+                                            ),
+                                        )
+                                    }
+                                    className="checkbox checkbox-primary"
+                                />
+                            </label>
+                        ))}
+                    </div>
                 </div>
+                <div id="search-by-timerange-section" className="py-4">
+                    <TimeRangePicker
+                        disableClock={true}
+                        onChange={setTimeRange}
+                        value={timeRange}
+                    />
+                </div>
+                <button
+                    title={'Submit search filter'}
+                    className="btn btn-primary btn-block mt-4"
+                    onClick={() => {
+                        setSearchFilters({ days, timeRange });
+                    }}
+                >
+                    Submit
+                </button>
             </div>
         </div>
     );
