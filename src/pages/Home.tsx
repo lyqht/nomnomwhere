@@ -1,25 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import { Restaurant } from '../../api/types/Restaurant';
-import FileUpload from '../components/FileUpload/FileUpload';
+import FileUpload from '../components/FileUpload';
+import Table from '../components/Table';
+import SearchFiltersSection, {
+    SearchFilters,
+} from '../components/SearchFilters';
 
 const emoji = ['🍔', '🌯', '🥗', '🍜', '🍙', '🍕', '😫', '😵'];
 const getRandomItem = (items: string[]) =>
     items[Math.floor(Math.random() * items.length)];
 
-function Welcome(): JSX.Element {
+function Home(): JSX.Element {
     const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
-
-    function isDateBeforeToday(date: Date) {
-        return (
-            new Date(date.toDateString()) < new Date(new Date().toDateString())
-        );
-    }
+    const [displayedRestaurants, setDisplayedRestaurants] = useState<
+        Restaurant[]
+    >([]);
+    const [searchNameInput, setSearchNameInput] = useState<string>();
+    const [filters, setFilters] = useState<SearchFilters>({
+        day: [],
+        openingTime: [],
+        closingTime: [],
+    });
 
     useEffect(() => {
         fetch('/api')
             .then((response) => response.json())
-            .then(({ data }) => setRestaurants(data));
+            .then(({ data }: { data: Restaurant[] }) => {
+                setRestaurants(data);
+                setDisplayedRestaurants(data);
+            });
     }, []);
+
+    useEffect(() => {
+        if (searchNameInput) {
+            setDisplayedRestaurants(
+                restaurants?.filter((stall) =>
+                    stall.name
+                        .toLowerCase()
+                        .includes(searchNameInput.toLowerCase()),
+                ) ?? [],
+            );
+        } else {
+            setDisplayedRestaurants(restaurants!);
+        }
+    }, [searchNameInput]);
+
+    useEffect(() => {
+        if (restaurants) {
+            const filtered = restaurants.filter(
+                (stall) =>
+                    stall.opening_hours.filter((timeslot) =>
+                        filters.day.includes(timeslot.day),
+                    ).length > 0,
+            );
+            setDisplayedRestaurants(filtered);
+        }
+    }, [
+        filters.day.length,
+        filters.openingTime.length,
+        filters.closingTime.length,
+    ]);
 
     return (
         <div className="p-12 h-screen">
@@ -28,110 +68,21 @@ function Welcome(): JSX.Element {
                     <h1 className="text-5xl font-bold italic">
                         Nomnom where? {getRandomItem(emoji)}
                     </h1>
-                    <div id="search-container" className="form-control">
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                placeholder="Search…"
-                                className="input input-bordered"
-                            />
-                            <button
-                                type="button"
-                                className="btn btn-square"
-                                title="search"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
-                <div className="py-8 h-3/4">
+                <div className="py-8 h-3/4 w-full flex flex-row">
                     {restaurants ? (
                         <>
-                            <div className="overflow-x-auto w-full h-full flex">
-                                <table className="table w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <input
-                                                    type="checkbox"
-                                                    className="checkbox"
-                                                    aria-label="test"
-                                                />
-                                            </th>
-                                            <th>Name</th>
-                                            <th>Opening Hours</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {restaurants.map((stall) => (
-                                            <tr key={`row-${stall.id}`}>
-                                                <th>
-                                                    <label>
-                                                        <input
-                                                            type="checkbox"
-                                                            className="checkbox"
-                                                            aria-label="add-into-collection-checkbox"
-                                                        />
-                                                    </label>
-                                                </th>
-                                                <td>
-                                                    <div className="flex items-center space-x-3">
-                                                        <div>
-                                                            <div className="font-bold">
-                                                                {stall.name}
-                                                                <br />
-                                                                {!isDateBeforeToday(
-                                                                    new Date(
-                                                                        stall.created_at,
-                                                                    ),
-                                                                ) ? (
-                                                                    <span className="badge badge-ghost badge-sm">
-                                                                        Recently
-                                                                        added
-                                                                    </span>
-                                                                ) : null}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {stall.opening_hours.map(
-                                                        (openingHour) => (
-                                                            <p>
-                                                                {
-                                                                    openingHour.day
-                                                                }{' '}
-                                                                {
-                                                                    openingHour.openingTime
-                                                                }{' '}
-                                                                —{' '}
-                                                                {
-                                                                    openingHour.closingTime
-                                                                }
-                                                            </p>
-                                                        ),
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <Table data={displayedRestaurants} />
+                            <div className="px-8 w-1/2">
+                                <SearchFiltersSection
+                                    searchFilters={filters}
+                                    setSearchFilters={setFilters}
+                                    setSearchNameInput={setSearchNameInput}
+                                />
+                                <div className="py-4" id="collections">
+                                    My collections
+                                </div>
                             </div>
                         </>
                     ) : (
@@ -144,4 +95,4 @@ function Welcome(): JSX.Element {
     );
 }
 
-export default Welcome;
+export default Home;
