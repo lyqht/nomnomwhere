@@ -12,9 +12,14 @@ This is a fullstack application built using Vite and deployed on Vercel.
 
 Frontend
 
+-   Search Filters based on datetime, name
 -   Upload CSV functionality. Tested the uploading & insertion to DB with this [sample csv](api/sampleFile.csv), containing 2k+ records.
+-   Browse and add public collections
+-   Add restaurants to the collections
 
 Backend
 
--   Mapper for mapping opening hours input string (2nd column) into JSON
 -   Parse CSV records and upload them into DB
+    -   Mapper for mapping opening hours input string (2nd column in .csv) into JSON, covered by tests
+    -   Able to map all records in the [sample csv](api/sampleFile.csv).
+-   API routes for creating/getting restaurants and collections
