@@ -11,45 +11,45 @@ export interface Database {
         Tables: {
             restaurants: {
                 Row: {
-                    id: number;
                     created_at: string;
                     opening_hours: Json;
                     name: string;
+                    id: string;
                 };
                 Insert: {
-                    id?: number;
                     created_at?: string | null;
                     opening_hours: Json;
                     name: string;
+                    id?: string | null;
                 };
                 Update: {
-                    id?: number;
                     created_at?: string | null;
                     opening_hours?: Json;
                     name?: string;
+                    id?: string | null;
                 };
             };
             collections: {
                 Row: {
-                    id: number;
                     created_at: string | null;
                     userId: string | null;
                     savedRestaurants: string[];
                     name: string;
+                    id: string;
                 };
                 Insert: {
-                    id?: number;
                     created_at?: string | null;
                     userId?: string | null;
                     savedRestaurants: string[];
                     name: string;
+                    id?: string | null;
                 };
                 Update: {
-                    id?: number;
                     created_at?: string | null;
                     userId?: string | null;
                     savedRestaurants?: string[];
                     name?: string;
+                    id?: string | null;
                 };
             };
         };
