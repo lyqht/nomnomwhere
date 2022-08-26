@@ -40,7 +40,7 @@ const SearchFiltersSection: React.FC<Props> = ({
     };
 
     return (
-        <div id="search-filters-section" className="shadow-md p-8 card">
+        <div id="search-filters-section" className="shadow-md rounded-3xl p-8">
             <div id="search-by-name-section">
                 <h2 className="text-lg">Search by name</h2>
                 <div className="input-group">

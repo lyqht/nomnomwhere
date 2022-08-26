@@ -22,11 +22,12 @@ const getRandomItem = (items: string[]) =>
 
 function Home(): JSX.Element {
     const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
-    const [currentActiveCollection, setCurrentActiveCollection] =
-        useState<Collection | null>();
+    const [selectedCollection, setSelectedCollection] =
+        useState<Collection | null>(null);
     const [displayedRestaurants, setDisplayedRestaurants] = useState<
         Restaurant[]
     >([]);
+    const [collections, setCollections] = useState<Collection[]>([]);
     const [searchNameInput, setSearchNameInput] = useState<string>();
     const [filters, setFilters] = useState<SearchFilters>({
         days: [],
@@ -64,6 +65,20 @@ function Home(): JSX.Element {
     useEffect(() => {
         fetchAndSetRestaurants();
     }, [userIsUploading]);
+
+    useEffect(() => {
+        if (restaurants) {
+            if (selectedCollection) {
+                setDisplayedRestaurants(
+                    restaurants?.filter((stall) =>
+                        selectedCollection.savedRestaurants.includes(stall.id),
+                    ),
+                );
+            } else {
+                setDisplayedRestaurants(restaurants);
+            }
+        }
+    }, [selectedCollection?.id]);
 
     useEffect(() => {
         if (restaurants) {
@@ -121,14 +136,27 @@ function Home(): JSX.Element {
                     {restaurants ? (
                         <>
                             <div className="w-1/2">
-                                <Table data={displayedRestaurants} />
+                                <Table
+                                    collections={collections}
+                                    data={displayedRestaurants}
+                                    showSaveToCollectionColumn={
+                                        selectedCollection ? false : true
+                                    }
+                                />
                                 <FileUpload
                                     userIsUploading={userIsUploading}
                                     setUserIsUploading={setUserIsUploading}
                                 />
                             </div>
                             <div className="px-8 w-1/2 flex flex-col gap-8">
-                                <Collections />
+                                <Collections
+                                    collections={collections}
+                                    setCollections={setCollections}
+                                    setSelectedCollection={
+                                        setSelectedCollection
+                                    }
+                                    selectedCollection={selectedCollection}
+                                />
                                 <SearchFiltersSection
                                     searchFilters={filters}
                                     setSearchFilters={setFilters}

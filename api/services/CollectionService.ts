@@ -29,6 +29,41 @@ class CollectionService {
         }
         return data[0];
     }
+
+    public async addRestaurantToCollection({
+        restaurantId,
+        collectionId,
+    }: {
+        restaurantId: string;
+        collectionId: string;
+    }): Promise<Collection> {
+        const { data: foundCollections, error } = await supabase
+            .from<Collection>('collections')
+            .select()
+            .eq('id', collectionId);
+
+        if (error) {
+            console.error(JSON.stringify(error));
+            throw new Error(JSON.stringify(error));
+        }
+
+        const savedRestaurants = foundCollections[0].savedRestaurants;
+        if (!savedRestaurants.includes(restaurantId)) {
+            savedRestaurants.push(restaurantId);
+            const { data, error: updateError } = await supabase
+                .from<Collection>('collections')
+                .update({ savedRestaurants })
+                .eq('id', collectionId);
+
+            if (updateError) {
+                console.error(JSON.stringify(updateError));
+                throw new Error(JSON.stringify(updateError));
+            }
+            return data[0];
+        }
+
+        return foundCollections[0];
+    }
 }
 
 export default new CollectionService();

@@ -4,8 +4,19 @@ import { Collection } from '../../api/types/Collection';
 
 type alertType = 'alert-success' | 'alert-error';
 
-const Collections = () => {
-    const [collections, setCollections] = useState<Collection[] | null>(null);
+interface Props {
+    collections: Collection[] | null;
+    setCollections: (x: Collection[]) => void;
+    selectedCollection: Collection | null;
+    setSelectedCollection: (x: Collection | null) => void;
+}
+
+const Collections: React.FC<Props> = ({
+    selectedCollection,
+    setSelectedCollection,
+    collections,
+    setCollections,
+}) => {
     const [userIsAddingCollection, setUserIsAddingCollection] = useState(false);
     const [loading, setLoading] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState<string>('');
@@ -48,7 +59,7 @@ const Collections = () => {
         fetchAndSetCollections();
     }, []);
     return (
-        <div id="collections-card" className="card p-8 shadow-md">
+        <div id="collections-card" className="rounded-3xl p-8 shadow-md">
             {alert && (
                 <div
                     id="alert"
@@ -64,7 +75,7 @@ const Collections = () => {
                             <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeWidth="2"
                                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
@@ -78,7 +89,7 @@ const Collections = () => {
                             <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeWidth="2"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
@@ -90,7 +101,7 @@ const Collections = () => {
                     </span>
                 </div>
             )}
-            <div id="collections-content">
+            <div id="collections-content" className="flex flex-col gap-4">
                 <div
                     id="title-and-add-collection"
                     className="flex flex-row justify-between items-center"
@@ -140,13 +151,30 @@ const Collections = () => {
                         </div>
                     </div>
                 ) : null}
-                <div id="collections-section">
-                    {collections?.map((collection) => (
-                        <div key={`collection-row-${collection.id}`}>
-                            <p>{collection.name}</p>
-                        </div>
-                    ))}
-                </div>
+                {collections ? (
+                    <ul id="collections-section" className="menu bg-base-100">
+                        {collections?.map((collection) => (
+                            <li key={`collection-row-${collection.id}`}>
+                                <a
+                                    className={`${
+                                        selectedCollection &&
+                                        selectedCollection.id === collection.id
+                                            ? 'active'
+                                            : ''
+                                    } p-4`}
+                                    onClick={() => {
+                                        selectedCollection &&
+                                        selectedCollection.id === collection.id
+                                            ? setSelectedCollection(null)
+                                            : setSelectedCollection(collection);
+                                    }}
+                                >
+                                    <p>{collection.name}</p>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                ) : null}
             </div>
         </div>
     );

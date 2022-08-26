@@ -17,4 +17,9 @@ router.post('/', async (req, res) => {
     res.status(200).json({ data });
 });
 
+router.patch('/', async (req, res) => {
+    const data = await CollectionService.addRestaurantToCollection(req.body);
+    res.status(200).json({ data });
+});
+
 export default router;
