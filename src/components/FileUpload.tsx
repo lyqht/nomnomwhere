@@ -1,17 +1,19 @@
 import React, { Fragment, useState } from 'react';
 import axios from 'axios';
 
-type File = {
-    fileName: string;
-    filePath: string;
-};
+interface Props {
+    userIsUploading: boolean;
+    setUserIsUploading: (x: boolean) => void;
+}
 
-const FileUpload = () => {
+const FileUpload: React.FC<Props> = ({
+    userIsUploading,
+    setUserIsUploading,
+}) => {
     const [file, setFile] = useState('');
     const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
-    const [userIsUploading, setUserIsUploading] = useState(false);
     const [uploadPercentage, setUploadPercentage] = useState<number>(0);
 
     const onChange = (e) => {

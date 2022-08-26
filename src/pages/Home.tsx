@@ -11,6 +11,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DayWithOpeningHours } from '../../api/types/OpeningHours';
 import Collections from '../components/Collections';
+import { Collection } from '../../api/types/Collection';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(customParseFormat);
@@ -21,6 +22,8 @@ const getRandomItem = (items: string[]) =>
 
 function Home(): JSX.Element {
     const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null);
+    const [currentActiveCollection, setCurrentActiveCollection] =
+        useState<Collection | null>();
     const [displayedRestaurants, setDisplayedRestaurants] = useState<
         Restaurant[]
     >([]);
@@ -29,14 +32,19 @@ function Home(): JSX.Element {
         days: [],
         timeRange: ['11:00', '22:00'],
     });
+    const [userIsUploading, setUserIsUploading] = useState(false);
 
-    useEffect(() => {
+    const fetchAndSetRestaurants = () => {
         fetch('/api/restaurants')
             .then((response) => response.json())
             .then(({ data }: { data: Restaurant[] }) => {
                 setRestaurants(data);
                 setDisplayedRestaurants(data);
             });
+    };
+
+    useEffect(() => {
+        fetchAndSetRestaurants();
     }, []);
 
     useEffect(() => {
@@ -52,6 +60,10 @@ function Home(): JSX.Element {
             setDisplayedRestaurants(restaurants!);
         }
     }, [searchNameInput]);
+
+    useEffect(() => {
+        fetchAndSetRestaurants();
+    }, [userIsUploading]);
 
     useEffect(() => {
         if (restaurants) {
@@ -108,8 +120,14 @@ function Home(): JSX.Element {
                 <div className="py-8 h-3/4 w-full flex flex-row">
                     {restaurants ? (
                         <>
-                            <Table data={displayedRestaurants} />
-                            <div className="px-8 w-1/2">
+                            <div className="w-1/2">
+                                <Table data={displayedRestaurants} />
+                                <FileUpload
+                                    userIsUploading={userIsUploading}
+                                    setUserIsUploading={setUserIsUploading}
+                                />
+                            </div>
+                            <div className="px-8 w-1/2 flex flex-col gap-8">
                                 <Collections />
                                 <SearchFiltersSection
                                     searchFilters={filters}
@@ -122,7 +140,6 @@ function Home(): JSX.Element {
                         <p>Fetching restaurants!</p>
                     )}
                 </div>
-                <FileUpload />
             </div>
         </div>
     );

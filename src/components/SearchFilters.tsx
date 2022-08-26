@@ -40,7 +40,7 @@ const SearchFiltersSection: React.FC<Props> = ({
     };
 
     return (
-        <div id="search-filters-section" className="shadow-md p-8 rounded">
+        <div id="search-filters-section" className="shadow-md p-8 card">
             <div id="search-by-name-section">
                 <h2 className="text-lg">Search by name</h2>
                 <div className="input-group">
@@ -76,13 +76,13 @@ const SearchFiltersSection: React.FC<Props> = ({
             <div id="search-by-datetime-section">
                 <div id="search-by-day-section" className="py-4">
                     <h2 className="text-lg">Search by opening hours</h2>
-                    <div className="form-control flex flex-row flex-wrap">
+                    <div className="form-control flex flex-row flex-wrap gap-2 py-4">
                         {weekdays.map((weekday) => (
                             <label
                                 key={`search-filter-${weekday}`}
-                                className="label cursor-pointer"
+                                className="label cursor-pointer badge badge-primary badge-outline p-4 items-center"
                             >
-                                <span className="label-text mr-4">
+                                <span className="label-text mr-2">
                                     {weekday}
                                 </span>
                                 <input

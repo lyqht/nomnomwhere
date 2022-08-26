@@ -3,23 +3,26 @@ import { Restaurant } from '../../api/types/Restaurant';
 
 interface Props {
     data: Restaurant[];
+    toSaveInCollection: boolean;
 }
 
 function isDateBeforeToday(date: Date) {
     return new Date(date.toDateString()) < new Date(new Date().toDateString());
 }
 
-const Table: React.FC<Props> = ({ data }) => {
+const Table: React.FC<Props> = ({ data, toSaveInCollection = false }) => {
     const [pageNumberIndex, setPageNumberIndex] = useState(0);
 
     return (
-        <div className="overflow-x-auto w-1/2 h-full flex shadow-md">
+        <div className="overflow-x-auto h-full flex card shadow-md overflow-y-auto">
             <table className="table w-full">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Opening Hours</th>
-                        <th>Save in collection</th>
+                        {toSaveInCollection ? (
+                            <th>Save in collection</th>
+                        ) : null}
                     </tr>
                 </thead>
                 <tbody>
@@ -53,15 +56,17 @@ const Table: React.FC<Props> = ({ data }) => {
                                     </p>
                                 ))}
                             </td>
-                            <td>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox"
-                                        aria-label="add-into-collection-checkbox"
-                                    />
-                                </label>
-                            </td>
+                            {toSaveInCollection ? (
+                                <td>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                            aria-label="add-into-collection-checkbox"
+                                        />
+                                    </label>
+                                </td>
+                            ) : null}
                         </tr>
                     ))}
                 </tbody>
