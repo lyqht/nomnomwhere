@@ -27,7 +27,7 @@ const FileUpload = () => {
         setUserIsUploading(true);
 
         try {
-            const res = await axios.post('/api/upload', formData, {
+            const res = await axios.post('/api/restaurants/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

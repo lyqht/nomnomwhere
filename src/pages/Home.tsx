@@ -30,7 +30,7 @@ function Home(): JSX.Element {
     });
 
     useEffect(() => {
-        fetch('/api')
+        fetch('/api/restaurants')
             .then((response) => response.json())
             .then(({ data }: { data: Restaurant[] }) => {
                 setRestaurants(data);

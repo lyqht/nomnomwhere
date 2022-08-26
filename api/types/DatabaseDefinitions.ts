@@ -29,24 +29,27 @@ export interface Database {
                     name?: string;
                 };
             };
-            collection: {
+            collections: {
                 Row: {
                     id: number;
                     created_at: string | null;
-                    userId: string;
+                    userId: string | null;
                     savedRestaurants: string[];
+                    name: string;
                 };
                 Insert: {
                     id?: number;
                     created_at?: string | null;
-                    userId: string;
+                    userId?: string | null;
                     savedRestaurants: string[];
+                    name: string;
                 };
                 Update: {
                     id?: number;
                     created_at?: string | null;
-                    userId?: string;
+                    userId?: string | null;
                     savedRestaurants?: string[];
+                    name?: string;
                 };
             };
         };

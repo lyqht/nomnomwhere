@@ -4,8 +4,8 @@ import fs from 'fs';
 import multer from 'multer';
 import os from 'os';
 import { finished } from 'stream/promises';
-import RestaurantService from './services/RestaurantService';
-import { CSVRecord } from './types/CSVRecord';
+import RestaurantService from '../services/RestaurantService';
+import { CSVRecord } from '../types/CSVRecord';
 
 const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
