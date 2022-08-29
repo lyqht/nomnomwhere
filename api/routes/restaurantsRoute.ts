@@ -5,14 +5,10 @@ import multer from 'multer';
 import os from 'os';
 import { finished } from 'stream/promises';
 import RestaurantService from '../services/RestaurantService';
-import { CSVRecord } from '../types/CSVRecord';
+import { CSVRecord } from '../types/Entities';
 
 const router = express.Router();
 const upload = multer({ dest: os.tmpdir() });
-
-router.get('/hello', async (_req, res) => {
-    res.status(200).json({ message: 'Hello World!' });
-});
 
 router.get('/', async (_req, res) => {
     const data = await RestaurantService.getRestaurants();
@@ -38,9 +34,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     await finished(parser);
 
     console.log('Finished reading CSV');
-    const result = await RestaurantService.addRestaurantsFromCSVRecords(
-        records,
-    );
+    const result = await RestaurantService.addRestaurantsFromCSVRecords(records);
 
     return res.json({ data: result });
 });

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Restaurant } from '../../api/types/Restaurant';
 import FileUpload from '../components/FileUpload';
 import Table from '../components/Table';
 import SearchFiltersSection, { SearchFilters } from '../components/SearchFilters';
@@ -7,9 +6,8 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { DayWithOpeningHours } from '../../api/types/OpeningHours';
+import { Collection, DayWithOpeningHours, Restaurant } from '../../api/types/Entities';
 import Collections from '../components/Collections';
-import { Collection } from '../../api/types/Collection';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(customParseFormat);

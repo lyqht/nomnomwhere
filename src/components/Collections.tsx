@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Collection } from '../../api/types/Collection';
+import { Collection } from '../../api/types/Entities';
 
 type alertType = 'alert-success' | 'alert-error';
 

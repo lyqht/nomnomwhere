@@ -1,12 +1,10 @@
 import { v4 } from 'uuid';
 import { supabase } from '../db';
-import { Collection } from '../types/Collection';
+import { Collection } from '../types/Entities';
 
 class CollectionService {
     public async getCollections(): Promise<Collection[]> {
-        const { data, error } = await supabase
-            .from<Collection>('collections')
-            .select();
+        const { data, error } = await supabase.from<Collection>('collections').select();
 
         if (error) {
             console.error(JSON.stringify(error));
@@ -16,9 +14,7 @@ class CollectionService {
         return data ?? [];
     }
 
-    public async addCollection(
-        collection: Partial<Collection>,
-    ): Promise<Collection> {
+    public async addCollection(collection: Partial<Collection>): Promise<Collection> {
         const { data, error } = await supabase
             .from<Collection>('collections')
             .insert({ ...collection, id: v4() });

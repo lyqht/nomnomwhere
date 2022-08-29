@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mapCSVRecordToRestaurant } from './csvRecordMapper';
-import { RestaurantToInsert } from '../types/Restaurant';
-import { CSVRecord } from '../types/CSVRecord';
+import { CSVRecord, RestaurantToInsert } from '../types/Entities';
 describe('Restaurant Mapper', () => {
     it('should map csv record into a restaurant object', () => {
         const csvRecord: CSVRecord = ['EPIC Steak', 'Mon 6 am - 10:45 pm'];

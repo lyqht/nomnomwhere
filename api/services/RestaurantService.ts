@@ -1,16 +1,12 @@
-import { Restaurant, RestaurantToInsert } from '../types/Restaurant';
 import { mapCSVRecordToRestaurant } from '../mappers/csvRecordMapper';
 import { supabase } from '../db';
-import { CSVRecord } from '../types/CSVRecord';
+import { CSVRecord, Restaurant, RestaurantToInsert } from '../types/Entities';
 import { v4 } from 'uuid';
 
 function spliceIntoChunks(arr: any[], chunkSize: number) {
     const res = [];
     while (arr.length > 0) {
-        const chunk = arr.splice(
-            0,
-            arr.length < chunkSize ? arr.length : chunkSize,
-        );
+        const chunk = arr.splice(0, arr.length < chunkSize ? arr.length : chunkSize);
         res.push(chunk);
     }
     return res;
@@ -18,9 +14,7 @@ function spliceIntoChunks(arr: any[], chunkSize: number) {
 
 class RestaurantService {
     public async getRestaurants(): Promise<Restaurant[]> {
-        const { data, error } = await supabase
-            .from<Restaurant>('restaurants')
-            .select();
+        const { data, error } = await supabase.from<Restaurant>('restaurants').select();
 
         if (error) {
             console.error(JSON.stringify(error));
@@ -30,9 +24,7 @@ class RestaurantService {
         return data ?? [];
     }
 
-    public async addRestaurantsFromCSVRecords(
-        csvRecords: CSVRecord[],
-    ): Promise<Restaurant[]> {
+    public async addRestaurantsFromCSVRecords(csvRecords: CSVRecord[]): Promise<Restaurant[]> {
         console.log(`Adding ${csvRecords.length} restaurants...`);
 
         // There are 27514 restaurants in the sample demo, and processing them all at once may result in memory overflow.

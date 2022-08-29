@@ -1,11 +1,9 @@
-import { DayWithOpeningHours } from '../types/OpeningHours';
+import { DayWithOpeningHours } from '../types/Entities';
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const isNumber = (n: string) => !isNaN(parseFloat(n)) && !isNaN((n as any) - 0);
 
-export const mapIntervalIntoDateRangeAndTimeRange = (
-    input: string,
-): string[] => {
+export const mapIntervalIntoDateRangeAndTimeRange = (input: string): string[] => {
     const letters = input.split('');
     let letterIsPartOfTimeString = false;
 
@@ -33,29 +31,22 @@ export const mapDayRangeAndTimeRangeToDaysWithOpeningHours = (
     input: string[],
 ): DayWithOpeningHours[] => {
     if (input.length !== 2) {
-        throw new Error(
-            'This method is expecting a date range & time range input.',
-        );
+        throw new Error('This method is expecting a date range & time range input.');
     }
 
     const dateRange = input[0];
     const timeRange = input[1];
     const [startDay, endDay] = dateRange.split('-');
     let dates: string[] = [];
-    let startDayIndex = weekdays.findIndex(
-        (day) => day === startDay.substring(0, 3),
-    );
-    const endDayIndex = endDay
-        ? weekdays.findIndex((day) => day === endDay.substring(0, 3))
-        : -1;
+    let startDayIndex = weekdays.findIndex((day) => day === startDay.substring(0, 3));
+    const endDayIndex = endDay ? weekdays.findIndex((day) => day === endDay.substring(0, 3)) : -1;
 
     if (endDayIndex === -1) {
         dates.push(weekdays[startDayIndex]);
     } else if (startDayIndex === endDayIndex + 1) {
         dates = weekdays;
     } else {
-        const indexToStop =
-            endDayIndex === weekdays.length - 1 ? 0 : endDayIndex + 1;
+        const indexToStop = endDayIndex === weekdays.length - 1 ? 0 : endDayIndex + 1;
         while (startDayIndex !== indexToStop) {
             dates.push(weekdays[startDayIndex]);
             if (startDayIndex + 1 > weekdays.length - 1) {
@@ -78,12 +69,9 @@ export const mapAllOpeningHoursIntoDaysWithOpeningHours = (
 
     intervals.forEach((interval) => {
         const formattedInterval = interval.trim();
-        const dateRangeAndTimeRange =
-            mapIntervalIntoDateRangeAndTimeRange(formattedInterval);
+        const dateRangeAndTimeRange = mapIntervalIntoDateRangeAndTimeRange(formattedInterval);
         const dayWithOpeningHours =
-            mapDayRangeAndTimeRangeToDaysWithOpeningHours(
-                dateRangeAndTimeRange,
-            );
+            mapDayRangeAndTimeRangeToDaysWithOpeningHours(dateRangeAndTimeRange);
         arrayOfDaysWithOpeningHours.push(...dayWithOpeningHours);
     });
 
