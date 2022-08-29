@@ -10,6 +10,8 @@ This is a fullstack application built using Vite and deployed on Vercel.
 
 ## Features
 
+![](preview.png)
+
 Frontend
 
 -   Search Filters based on datetime, name
