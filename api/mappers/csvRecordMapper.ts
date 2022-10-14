@@ -1,4 +1,4 @@
-import { CSVRecord, RestaurantToInsert } from '../types/Entities';
+import { CSVRecord, RestaurantToInsert } from '../../types/Entities';
 import { mapAllOpeningHoursIntoDaysWithOpeningHours } from './openingHoursMapper';
 
 export const mapCSVRecordToRestaurant = (csvRecord: CSVRecord): RestaurantToInsert => {

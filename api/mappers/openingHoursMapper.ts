@@ -1,4 +1,4 @@
-import { DayWithOpeningHours } from '../types/Entities';
+import { DayWithOpeningHours } from '../../types/Entities';
 
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const isNumber = (n: string) => !isNaN(parseFloat(n)) && !isNaN((n as any) - 0);

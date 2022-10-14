@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Restaurant, Collection } from '../../api/types/Entities';
+import { Restaurant, Collection } from '../../types/Entities';
 
 interface Props {
     data: Restaurant[];

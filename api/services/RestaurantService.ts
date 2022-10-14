@@ -1,6 +1,6 @@
 import { mapCSVRecordToRestaurant } from '../mappers/csvRecordMapper';
 import { supabase } from '../db';
-import { CSVRecord, Restaurant, RestaurantToInsert } from '../types/Entities';
+import { CSVRecord, Restaurant, RestaurantToInsert } from '../../types/Entities';
 import { v4 } from 'uuid';
 
 function spliceIntoChunks(arr: any[], chunkSize: number) {

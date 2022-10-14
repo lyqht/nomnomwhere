@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { supabase } from '../db';
-import { Collection } from '../types/Entities';
+import { Collection } from '../../types/Entities';
 
 class CollectionService {
     public async getCollections(): Promise<Collection[]> {

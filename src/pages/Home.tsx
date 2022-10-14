@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Collection, DayWithOpeningHours, Restaurant } from '../../api/types/Entities';
+import { Collection, DayWithOpeningHours, Restaurant } from '../../types/Entities';
 import Collections from '../components/Collections';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
